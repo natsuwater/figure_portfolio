@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+<meta name="copyright" content="TiddlyWiki created by Jeremy Ruston, copyright />
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<title>Figure Portfolio — Collection of simulation results and other computer generated figures</title>
+<!--~~ This is a Tiddlywiki file. The points of interest in the file are marked with this pattern ~~--><!--~~ Raw markup ~~-->
+</head>
+<body class="tc-body">
+<!--~~ Static styles ~~-->
+<div id="styleArea">
+<style data-tiddler-title="$:/boot/boot.css" data-tiddler-type="text/css" type="text/css">
+.tc-password-wrapper input {	width: 100%;}
+</style>
+</div>
+<!--~~ Static content for Google and browsers without JavaScript ~~-->
+<noscript>
+<div id="splashArea">
+<p>This TiddlyWiki contains the following tiddlers:</p><p><ul>
+<li>$:/config/markdown/dialect</li>
+</ul></p>
+</div>
+</noscript>
+<!--~~ Ordinary tiddlers ~~-->
+<div id="storeArea" style="display:none;">
+<div created="20180206151146040" modified="20180206210620053" title="$:/config/markdown/dialect">
+<pre>Maruku</pre>
+</div>
+<div created="20180209221111649" modified="20180209141323703" tags="blue [[red dot]]" title="Generated tiddler markdown" type="text/x-markdown">
+<pre>![image](p30_DB30_8mm_3d06_20sci_Pxave_prof.png){:width=&quot;1000&quot;}
+![image](p30_DB30_8mm_3d06_20sci_Pz_prof.png){:width=&quot;1000&quot;}
+
+* Imagine there's no heaven
+* Imagine all the people living life in peace
+* You...
+</pre></div>
+<div created="20180206144335953" modified="20180210052404071" tags="" title="Recently Added">
+<pre>&lt;&lt;timeline field:&quot;created&quot;&gt;&gt;</pre>
+</div>
+</div>
+<!--~~ Library modules ~~-->
+<div id="libraryModules" style="display:none;">
+<script data-tiddler-library="yes"  type="text/javascript">
+"use strict";var sjcl={function(a){this.toString=function(){return"READY: "+this.message};this.message=a}};
+</script>
+</div>
+<!--~~ Boot kernel prologue ~~-->
+	<div id="bootKernelPrefix" style="display:none;">
+<script data-tiddler-title="$:/boot/bootprefix.js">
+$tw.boot.doesTaskMatchPlatform = function(taskModule) {return true;};
+$tw.hooks = $tw.hooks || { names: {}};
+
+</script>
+</div>
+</body>
+</html>
