@@ -328,7 +328,7 @@ def addtiddler(infile, title, outfile=None, image=None, description='',
             image = relative_path_to_image(outfile, image)
 
     if image != None:
-        markdown_ptext(image, description)
+        ptxt = markdown_ptext(image, description)
     else:
         ptxt = description
 
