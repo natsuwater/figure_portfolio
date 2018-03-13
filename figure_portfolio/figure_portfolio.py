@@ -398,20 +398,20 @@ if __name__ == "__main__":
     parser.add_option('-i', 
                         action='store', 
                         dest='infile', 
-                        help='Relative path to input TiddlyWiki file.')
+                        help='Path to input TiddlyWiki file. Required.')
+    parser.add_option('--title', 
+                        action='store',
+                        dest='title',
+                        help='Title for the new Tiddler. Required.')
     parser.add_option('-o', 
                         action='store', 
                         dest='outfile', 
                         help='Relative path to output TiddlyWiki file.  If not specified, tiddler will be added to INPUT.')
-    parser.add_option('--title', 
-                        action='store',
-                        dest='title',
-                        help='Optional title for the new Tiddler.  Default is image path (if provided), otherwise "New Tiddler".')
     parser.add_option ('--description', 
                         action='store', 
                         default='', 
                         dest='description', 
-                        help='Text to be added below the image in the tiddler. Can be any valid TiddlyWiki syntax.')
+                        help='Text to be added below the image in the tiddler. Markdown (Maruku flavor) can be used.')
     parser.add_option('--image', 
                         action='store', 
                         dest='image', 
