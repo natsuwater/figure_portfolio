@@ -300,7 +300,7 @@ def addtiddler(infile, title, outfile=None, image=None, description='',
 
     :param str infile: TiddlyWiki file.
     :param str title: The title of the new tiddler.
-    :param str outfile: Input file. Default is the input file.
+    :param str outfile: Output file. When it is `None`, overwrites the input file.
     :param image: The image file(s) to be linked from the new tiddler.
     :type image: list or str
     :param description: The text content of the new tiddler (mark down text).
