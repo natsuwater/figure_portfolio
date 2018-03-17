@@ -16,7 +16,7 @@ Put the file `figure_portfolio.py` in your current directory or in your `PYTHON_
 
     python figure_portfolio.py  -i tw5md_figs.html --title TimeDependency --image "temp_*.png" --tags "cheese"
 
-![TiddlyWiki01](docs\TiddlyWiki01.jpg)
+![TiddlyWiki01](doc\TiddlyWiki01.jpg)
 
 Figure: Each box is a *tiddler* in the *TiddlyWiki*.
 
