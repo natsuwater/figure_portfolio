@@ -76,7 +76,7 @@ class TiddlyWikiParse(object):
         lines.append(self.infile.readline())
         while not lines[-1].startswith(startoftiddler):
             if lines[-1] == endoftiddlerblock:
-                self.buffer = lines
+                self.trailerlines = lines
                 return None
             lines.append(self.infile.readline())
         while not lines[-1].endswith(endoftiddler):
@@ -87,27 +87,24 @@ class TiddlyWikiParse(object):
 
     def read_trailer(self):
         """Read the trailing part. """
-        trailerlines = self.buffer
         line = self.infile.readline()
         while line:
-            trailerlines.append(line)
+            self.trailerlines.append(line)
             line = self.infile.readline()
-        self.trailerlines = trailerlines
 
     def read(self): 
         """Read all the text of a tiddly wiki file."""
-        tiddlers = []
+        self.tiddlers = []
         with open(self.infile, encoding="utf-8", mode='r') as infile:
             self.infile = infile
 
             self.read_header()
             r = self.read_tiddler()
             while r:
-                tiddlers.append(r)
+                self.tiddlers.append(r)
                 r = self.read_tiddler()
             self.read_trailer()
         
-        self.tiddlers = tiddlers
         self.tags()
 
     def tags(self):
@@ -134,7 +131,7 @@ class TiddlyWikiParse(object):
     def taglist_tiddler(self):
         """Generate a tiddler `Tag List` listing all tags. """
         title = 'Tag List'
-        modified = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")[:-3]
+        modified = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S%f")[:-3]        
         index, created = self.find_tiddler(title)
         if created == None:
             created = modified
@@ -146,12 +143,8 @@ class TiddlyWikiParse(object):
             ptext += '<<list-links "[tag[{}]]">>\n'.format(t)
         tags = ''
         # "20180210 0511 39454"
-        tid = tiddler_generate(title, ptext, tags, created, modified)
-        if index:
-            self.tiddlers[index] = tid
-        else:
-            self.tiddlers.append(tid)
-            
+        self.tiddler_generate(title, ptext, tags, created, modified, index)
+
     def new_tiddler(self, title, ptext, tags, replace):
         """Collect the parameter and call `tiddler_generate()`.
         
@@ -162,7 +155,7 @@ class TiddlyWikiParse(object):
         :param boolean replace: Replace the existing tiddler when an old one exists. 
         """
         tidtype = 'text/x-markdown'
-        modified = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")[:-3]
+        modified = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S%f")[:-3]        
         index, created = self.find_tiddler(title)
         if replace:
             tlnext = title
@@ -174,18 +167,52 @@ class TiddlyWikiParse(object):
                     tlnext = title + '-{0:02d}'.format(i)
                     index, created = self.find_tiddler(tlnext)
                     if index == None:
+                        created = modified
                         break
                 else: 
                     msg = "Warning: Overwriting the 100 th tiddler '{}' "
                     print(msg.format(tlnext))
+                    # index is self.finde_tiddler(title + '-99') [0]
             else:
                 tlnext = title
-        tid = tiddler_generate(tlnext, ptext, tags, created, modified, tidtype)
-        tid.title = tlnext
-        if index:
-            self.tiddlers[index] = tid
+        self.tiddler_generate(tlnext, ptext, tags, created, modified, index, tidtype)
+
+    def tiddler_generate(self, title, ptext, tags, created, modified, index, tidtype=''):
+        """Create a `Tiddler`.
+    
+        :param str title: Title of the tiddler
+        :param str ptext: Markdown style text of the tiddler
+        :param tags: Tags
+        :type tags: str or list
+        :param str created: The date and time the tiddler is originally generated. 
+        :param str modified: The date and time the tiddler is last edited.
+        :param int index: `self.tidders[index]` is replaced with new tiddler. 
+         If index is `None` the new tiddler is appended.
+        :param str tidtype: Tiddler type `markdown` or empty for native format. 
+        :returns: Generated Tiddler.
+        """
+        tagstr = ''
+        if type(tags) == list:
+            for t in tags:
+                tagstr += ' {0}'.format(t)
+            tagstr = tagstr.strip()
         else:
-            self.tiddlers.append(tid)
+            tagstr = tags
+        tidd_hdr = '<div created="{created}" modified="{modified}" '
+        tidd_hdr += 'tags="{tags}" title="{title}" type="{tidtype}">\n'
+        tidd_hdr = tidd_hdr.format(created=created, modified=modified, tags=tagstr, 
+            title=title, tidtype=tidtype)
+        tidd_tlr = '\n</pre></div>'
+        tidd_cnts = '<pre>{description}'.format(description=html.escape(ptext))
+        tmp = tidd_hdr + tidd_cnts + tidd_tlr
+        tmp = tmp.split('\n')
+        tmp = [t + '\n' for t in tmp]
+        tiddler = Tiddler(tmp)
+        tiddler.parse()
+        if index:
+            self.tiddlers[index] = tiddler
+        else:
+            self.tiddlers.append(tiddler)
 
     def publish(self, outfile):
         """Write the tiddly wiki to `outfile`. """
@@ -234,38 +261,6 @@ def markdownimage(img, width=1000):
     """
     return '![image](' + img + '){:width="' + str(width) + '"}\n'
 
-def tiddler_generate(title, ptext, tags, created, modified, tidtype=''):
-    """Create a `Tiddler`.
-
-    :param str title: Title of the tiddler
-    :param str ptext: Markdown style text of the tiddler
-    :param tags: Tags
-    :type tags: str or list
-    :param str created: The date and time the tiddler is originally generated. 
-    :param str modified: The date and time the tiddler is last edited.
-    :param str tidtype: Tiddler type `markdown` or empty for native format. 
-    :returns: Generated Tiddler.
-    """
-    tagstr = ''
-    if type(tags) == list:
-        for t in tags:
-            tagstr += ' {0}'.format(t)
-        tagstr = tagstr.strip()
-    else:
-        tagstr = tags
-    tidd_hdr = '<div created="{created}" modified="{modified}" '
-    tidd_hdr += 'tags="{tags}" title="{title}" type="{tidtype}">\n'
-    tidd_hdr = tidd_hdr.format(created=created, modified=modified, tags=tagstr, 
-        title=title, tidtype=tidtype)
-    tidd_tlr = '\n</pre></div>'
-    tidd_cnts = '<pre>{description}'.format(description=html.escape(ptext))
-    tmp = tidd_hdr + tidd_cnts + tidd_tlr
-    tmp = tmp.split('\n')
-    tmp = [t + '\n' for t in tmp]
-    tid = Tiddler(tmp)
-    tid.parse()
-    
-    return tid
 
 def relative_path_to_image(outfile, image):
     """Convert image file path relative to the html file (Wrapper). """ 
@@ -359,7 +354,7 @@ def addtiddler(infile, title, outfile=None, image=None, description='',
 #%%
 """
 # tags are put together in one string (as from optparse) 
-    addtiddler(infile='figure_portfolio\\tw5md_empty0.html', 
+    addtiddler(infile='figure_portfolio\\tw5md_figs.html', 
                 outfile='figure_portfolio\\tw5md_empty0_n.html' ,
                 image='\\tests\\p30.png', 
                 description='This is the initial run \n for theis script', 
@@ -391,7 +386,6 @@ def addtiddler(infile, title, outfile=None, image=None, description='',
 #%%
 if __name__ == "__main__":
     # Parse commandline arguments if this module is run as a script.
-
     import optparse
     import glob
     parser = optparse.OptionParser()
@@ -423,11 +417,4 @@ if __name__ == "__main__":
                         help='Quoted space-delimited tags for this tiddler.  Ex: --tags "images temperature depth"')
     (options, args) = parser.parse_args()
     images = glob.glob(options.image)
-
-    addtiddler(infile=options.infile, 
-                outfile=options.outfile, 
-                image=images, 
-                description=options.description, 
-                tags=options.tags, 
-                title=options.title)
 

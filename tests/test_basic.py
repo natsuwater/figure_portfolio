@@ -126,8 +126,14 @@ class TestCore(unittest.TestCase):
     def test_tiddler_generate(self):
         # makes a tiddler block
         tidtype = 'text/x-markdown'
-        tid = figure_portfolio.tiddler_generate('Blue Moon', 'Hello moon', 
-            ['yellow', '[[blue dot]]'], '201801', '201802', tidtype=tidtype)
+        infile = "tests\\tw5md_mock.html"
+        tw = figure_portfolio.TiddlyWikiParse(infile)
+        tw.read()
+        tw.tags()        
+        tidtype = 'text/x-markdown'
+        tw.tiddler_generate('Blue Moon', 'Hello moon', 
+            ['yellow', '[[blue dot]]'], '201801', '201802', None, tidtype=tidtype)
+        tid = tw.tiddlers[-1]
         self.assertEqual(TestCore.text + TestCore.text2, tid.text[0])
         self.assertEqual(TestCore.text3, tid.text[1])
         self.assertEqual(TestCore.text4, tid.text[2])
@@ -136,8 +142,6 @@ class TestCore(unittest.TestCase):
         self.assertEqual(['yellow', '[[blue dot]]'], tid.tags)
 
     def test_new_tiddler(self):
-
-        tidtype = 'text/x-markdown'
         infile = "tests\\tw5md_mock.html"
         tw = figure_portfolio.TiddlyWikiParse(infile)
         tw.read()
