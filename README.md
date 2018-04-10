@@ -1,4 +1,4 @@
-figure portfolio - collect your computer generated figures and plots in a TiddlyWiki 
+figure portfolio - collect your computer-generated figures and plots in a TiddlyWiki 
 
 - [INSTALLATION](#installation)
 - [DESCRIPTION](#description)
@@ -8,21 +8,21 @@ figure portfolio - collect your computer generated figures and plots in a Tiddly
 
 # INSTALLATION
 
-Put the file `figure_portfolio.py` in your current directory or in your `PYTHON_PATH`.
+Put the file `figure_portfolio.py` in your current directory or under your `PYTHONPATH`.
 
 # DESCRIPTION
-**figure_portfolio** is a python module to add a *tiddler* in a *TiddlyWiki 5* html file. The tiddler, a micro content in a tiddly wiki, is marked up with markdown, might include links to existing figures and you can edit the tiddler after it is added by this module.
+**figure_portfolio** is a python module that adds a *tiddler* in a *TiddlyWiki 5* html file. The tiddler, a micro content in a *TiddlyWiki*, includes markdown links to existing figures, and you can edit the tiddlers after they are added by this module.
 
 
     python figure_portfolio.py  -i tw5md_figs.html --title TimeDependency --image "temp_*.png" --tags "cheese"
 
-![TiddlyWiki01](doc/TiddlyWiki01.jpg)
+![TiddlyWiki01](docs\TiddlyWiki01.jpg)
 
 Figure: Each box is a *tiddler* in the *TiddlyWiki*.
 
-The idea behind this module is that when you do a bunch of numerical experiment, you often generate a lot of plots as the calculation results. Then you often need to browse a lot of plots to examine check the calculation. Maybe you need to keep record on how you generated these plots, what was the parameter used for the calculation, which version of the code was used, and so on.  
+The idea behind this module is that when you do a bunch of numerical experiment, you often get a lot of plots as calculation results. Then you often need to browse them to examine how the calculation went on.  Maybe, you need to keep records on how you generated these plots, what was the parameter used for the calculation, which version of the code was used, and so on.  
 
-The python module **figure_portfolio** is made to help keeping track of the plots. The module can be used from command line interface or imported into other python programs as follows: 
+The python module **figure_portfolio** is made to help keep track of the plots. The module can be used from command line interface or imported into other python programs as follows: 
 
 ```python
 import figure_portfolio
@@ -31,13 +31,13 @@ import figure_portfolio
 images = ["fig1.png", "fig2.png"]
 myfig1.figsave(images[0])
 myfig2.figsave(images[1])
-addtiddler(infile='tw5md_figs.html', title='Figs 1-2', image=images,  
+figure_portfolio.addtiddler(infile='tw5md_figs.html', title='Figs 1-2', image=images,  
     description='Two plots made with some parameter set', tags=['tomato', 'potato'])
 ```
 
 [Tiddly Wiki](https://tiddlywiki.com/) is "a unique non-linear notebook for capturing, organizing and sharing complex information."  See [A Gentle Guide to TiddlyWiki](https://tiddlywiki.com/#A%20Gentle%20Guide%20to%20TiddlyWiki:%5B%5BA%20Gentle%20Guide%20to%20TiddlyWiki%5D%5D)  for more information. 
-There is an add-on to use markdown in the TiddlyWiki, and the file  `tw5md_figs.html` already includes that add-on.  So use the file `tw5md_figs.html` as a template for TiddlyWiki to use with `figure_portfolio`.  
-The tiddlers can be searched by its title or tags, enabling systematic comparison of the plots, once you collect the plots in one TiddlyWiki.  
+There is an add-on to use markdown in the *TiddlyWiki*, and the file  `tw5md_figs.html` already includes that add-on.  So use the file `tw5md_figs.html` as a template for *TiddlyWiki* to use with `figure_portfolio`.  
+The *tiddlers* can be searched by its title or tags, enabling systematic comparison of the plots, once you collect the plots in one *TiddlyWiki*.  *TiddlyWiki* is highly customizable.  Read instructions in http://tiddlywiki.com  
 
 # COMMAND-LINE-OPTIONS
     -i htmlfile   Path to input TiddlyWiki file. Required.
